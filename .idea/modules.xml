@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/associate/associate.iml" filepath="$PROJECT_DIR$/associate/associate.iml" />
-      <module fileurl="file://$PROJECT_DIR$/unicred-pagamento.iml" filepath="$PROJECT_DIR$/unicred-pagamento.iml" />
-    </modules>
-  </component>
-</project>
