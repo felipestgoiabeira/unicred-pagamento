@@ -1,4 +1,4 @@
-package com.unicred.associate.domain;
+package com.unicred.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +24,8 @@ public class Associate {
     private String document;
 
     @Column(name = "tipo_pessoa", length = 2, nullable = false)
-    private String personType;
+    @Enumerated(EnumType.STRING)
+    private PersonType personType;
 
     @Column(name = "nome", length = 50, nullable = false)
     private String name;
