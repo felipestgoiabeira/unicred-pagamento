@@ -1,7 +1,15 @@
 version: '3.5'
 
 services:
-  db:
+  associate:
+      build:
+        context: ..
+        dockerfile: docker/Dockerfile
+      command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
+      depends_on:
+        - postgres
+
+  postgres:
     image: postgres
     hostname: db
     environment:
@@ -10,6 +18,7 @@ services:
       POSTGRES_DB: UNICRED
     ports:
       - 5432:5432
+
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest

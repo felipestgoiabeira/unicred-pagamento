@@ -1,9 +1,9 @@
 package com.unicred.service;
 
-import com.unicred.controller.mapper.AssociateMapper;
 import com.unicred.domain.Associate;
-import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
+import com.unicred.controller.mapper.AssociateMapper;
+import com.unicred.exception.EntityExistsException;
 import com.unicred.respository.AssociateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

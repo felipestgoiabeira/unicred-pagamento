@@ -1,8 +1,8 @@
 package com.unicred.controller.dto.request;
 
+import com.unicred.validation.annotation.EnumValue;
 import com.unicred.domain.PersonType;
 import com.unicred.validation.annotation.CpfCnpj;
-import com.unicred.validation.annotation.EnumValue;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

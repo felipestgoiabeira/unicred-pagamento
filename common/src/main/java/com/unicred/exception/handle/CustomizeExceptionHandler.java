@@ -4,9 +4,9 @@ package com.unicred.exception.handle;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.exception.model.ExceptionModel;
+import com.unicred.exception.EntityExistsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,33 +48,32 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
 //    }
 
     @ExceptionHandler(EntityExistsException.class)
-    public final ResponseEntity<Object> handleAllException(EntityExistsException ex, WebRequest request) throws Exception {
+    public final ResponseEntity<Object> handleAllException(EntityExistsException ex, WebRequest request) {
         HttpStatus status = HttpStatus.EXPECTATION_FAILED;
         return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public final ResponseEntity<Object> handleAllException(EntityNotFoundException ex, WebRequest request) throws Exception {
+    public final ResponseEntity<Object> handleAllException(EntityNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.EXPECTATION_FAILED;
         return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
     }
 
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) throws Exception {
+    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
         ex.printStackTrace();
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return handleExceptionInternal(ex, toExceptionModel(status, MSG_ERRO_GENERICA_USUARIO_FINAL), new HttpHeaders(), status, request);
     }
 
     private ExceptionModel toExceptionModel(HttpStatusCode status, String message) {
-        ExceptionModel exceptionModel = ExceptionModel
+        return ExceptionModel
                 .builder()
                 .datestamp(new Date())
                 .message(message)
                 .code(status.value())
                 .build();
-        return exceptionModel;
     }
 
     @Override
@@ -212,7 +211,7 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
 
     private String joinPath(List<JsonMappingException.Reference> references) {
         return references.stream()
-                .map(ref -> ref.getFieldName())
+                .map(JsonMappingException.Reference::getFieldName)
                 .collect(Collectors.joining("."));
     }
 }

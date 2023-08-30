@@ -1,8 +1,8 @@
 package com.unicred.controller.mapper;
 
+import com.unicred.domain.Associate;
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.controller.dto.response.AssociateResponseDTO;
-import com.unicred.domain.Associate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
