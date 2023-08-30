@@ -16,8 +16,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AssociateService {
 
-    public final AssociateRepository associateRepository;
-    public final AssociateMapper associateMapper;
+    private final AssociateRepository associateRepository;
+    private final AssociateMapper associateMapper;
 
     public Associate create(Associate associate) throws EntityExistsException {
 
