@@ -2,5 +2,5 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     password: 1234
-    url: jdbc:postgresql://postgres:5432/UNICRED
+    url: jdbc:postgresql://dbassociate:5432/UNICRED_ASSOCIADO
     username: root

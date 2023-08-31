@@ -7,17 +7,27 @@ services:
         dockerfile: docker/Dockerfile
       command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
       depends_on:
-        - postgres
+        - dbassociate
 
-  postgres:
+  dbassociate:
     image: postgres
     hostname: db
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: UNICRED
+      POSTGRES_DB: UNICRED_ASSOCIADO
     ports:
       - 5432:5432
+
+  dbticket:
+    image: postgres
+    hostname: db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: UNICRED_BOLETO
+    ports:
+      - 5433:5432
 
   zookeeper:
     container_name: zookeeper
