@@ -6,13 +6,11 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "associado")
+@Table(name = "associado", indexes = @Index(name = "idx_documento", columnList = "documento", unique = true))
 public class Associate {
 
     @Id

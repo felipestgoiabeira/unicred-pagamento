@@ -6,6 +6,7 @@
     <modules>
         <module>common</module>
         <module>associate</module>
+        <module>ticket</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -14,10 +15,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.unicred</groupId>
-    <artifactId>pagamento</artifactId>
+    <artifactId>payment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>unicred-pagamento</name>
-    <description>unicred-pagamento</description>
+    <name>unicred-payment</name>
+    <description>unicred-payment</description>
     <properties>
         <java.version>17</java.version>
         <springdoc-openapi.version>2.0.4</springdoc-openapi.version>

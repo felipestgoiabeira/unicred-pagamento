@@ -2,7 +2,7 @@ package com.unicred.service;
 
 import com.unicred.domain.Associate;
 import com.unicred.exception.EntityNotFoundException;
-import com.unicred.controller.mapper.AssociateMapper;
+import com.unicred.mapper.AssociateMapper;
 import com.unicred.exception.EntityExistsException;
 import com.unicred.respository.AssociateRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,8 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class AssociateService {
+
+    private final String MESSAGE_NOT_FOUND = "Associado não encontrado";
 
     private final AssociateRepository associateRepository;
     private final AssociateMapper associateMapper;
@@ -31,7 +33,7 @@ public class AssociateService {
         var associate = associateRepository.findById(id);
 
         if(associate.isEmpty()){
-            throw new EntityNotFoundException("Associado não encontrado");
+            throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         return associate.get();
@@ -41,7 +43,7 @@ public class AssociateService {
         var associateOptional = associateRepository.findById(id);
 
         if(associateOptional.isEmpty()){
-            throw new EntityNotFoundException("Associado não encontrado");
+            throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         var associate = associateOptional.get();
@@ -55,7 +57,8 @@ public class AssociateService {
         var associate = associateRepository.findById(id);
 
         if(associate.isEmpty()){
-            throw new EntityNotFoundException("Associado não encontrado");
+
+            throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         associateRepository.delete(associate.get());

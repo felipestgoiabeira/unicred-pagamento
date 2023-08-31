@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>associate</artifactId>
+    <artifactId>ticket</artifactId>
+
 
     <dependencies>
 
@@ -44,8 +45,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            **/AssociateApplication.class,
-                            **/AssociateMapperImpl.class
+                            **/PaymentApplication.class
                         </exclude>
                         <exclude>**/*get*</exclude>
                         <exclude>**/*set*</exclude>

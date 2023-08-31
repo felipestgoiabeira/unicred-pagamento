@@ -1,3 +1,7 @@
+logging:
+  level:
+    root: DEBUG
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -20,10 +24,13 @@ spring:
       max-poll-records: 1
       enable-auto-commit: false
       auto-offset-reset: earliest
-      group-id: "unicred-pagamento"
-      client-id: "unicred-pagamento"
+      group-id: "unicred-payment"
+      client-id: "unicred-payment"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     listener:
       ack-mode: manual_immediate
+server:
+  servlet:
+    context-path: /api

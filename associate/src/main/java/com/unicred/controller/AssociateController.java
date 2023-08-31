@@ -5,7 +5,7 @@ import com.unicred.exception.EntityNotFoundException;
 import com.unicred.service.AssociateService;
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.controller.dto.response.AssociateResponseDTO;
-import com.unicred.controller.mapper.AssociateMapper;
+import com.unicred.mapper.AssociateMapper;
 import com.unicred.exception.EntityExistsException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.unicred.controller.mapper;
+package com.unicred.mapper;
 
 import com.unicred.domain.Associate;
 import com.unicred.controller.dto.request.AssociateRequestDTO;

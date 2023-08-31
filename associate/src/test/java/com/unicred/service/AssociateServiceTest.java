@@ -1,6 +1,6 @@
 package com.unicred.service;
 
-import com.unicred.controller.mapper.AssociateMapper;
+import com.unicred.mapper.AssociateMapper;
 import com.unicred.domain.Associate;
 import com.unicred.domain.PersonType;
 import com.unicred.exception.EntityExistsException;
@@ -16,6 +16,8 @@ import org.mockito.Mockito;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.Mockito.*;
+
 public class AssociateServiceTest extends TestSupport {
 
     @Mock
@@ -30,13 +32,10 @@ public class AssociateServiceTest extends TestSupport {
     @Test
     void testShouldCreateAssociate() throws EntityExistsException {
 
-        var associateBuilder = Associate.builder()
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe");
+        var associateBuilder = getAssociateBuilder();
 
-        Mockito.when(associateRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(associateRepository.save(Mockito.any(Associate.class)))
+        when(associateRepository.findByDocument(anyString())).thenReturn(Optional.empty());
+        when(associateRepository.save(any(Associate.class)))
                 .thenReturn(associateBuilder.uuid(UUID.randomUUID()).build());
 
         var associate = associateService.create(associateBuilder.build());
@@ -47,12 +46,9 @@ public class AssociateServiceTest extends TestSupport {
     @Test
     void testShouldThrowsEntityExistsExceptionWhenCreate() {
 
-        var associateBuilder = Associate.builder()
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe");
+        var associateBuilder = getAssociateBuilder();
 
-        Mockito.when(associateRepository.findByDocument(Mockito.anyString()))
+        when(associateRepository.findByDocument(anyString()))
                 .thenReturn(Optional.of(associateBuilder.build()));
 
 
@@ -75,7 +71,7 @@ public class AssociateServiceTest extends TestSupport {
                 .name("Felipe")
                 .build();
 
-        Mockito.when(associateRepository.findById(uuid)).thenReturn(Optional.of(associate));
+        when(associateRepository.findById(uuid)).thenReturn(Optional.of(associate));
 
         var associateResult = associateService.findByUUID(uuid);
 
@@ -87,7 +83,7 @@ public class AssociateServiceTest extends TestSupport {
 
         var uuid = UUID.randomUUID();
 
-        Mockito.when(associateRepository.findById(uuid)).thenReturn(Optional.empty());
+        when(associateRepository.findById(uuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
                 EntityNotFoundException.class,
@@ -103,23 +99,20 @@ public class AssociateServiceTest extends TestSupport {
 
         var newName = "Felipe Goiabeira";
 
-        var associateBuilder = Associate.builder()
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe");
+        var associateBuilder = getAssociateBuilder();
 
         Associate associateFromDatabase = associateBuilder.uuid(uuid).build();
 
-        Mockito.when(associateRepository.findById(uuid))
+        when(associateRepository.findById(uuid))
                 .thenReturn(Optional.of(associateFromDatabase));
-        Mockito.when(associateRepository.save(Mockito.any()))
+        when(associateRepository.save(any()))
                 .thenReturn(associateBuilder.name(newName).build());
 
         Associate associateToUpdate = associateBuilder.build();
 
         var associateResult = associateService.update(uuid, associateToUpdate);
 
-        Mockito.verify(associateMapper, Mockito.atLeastOnce()).updateAssociate(associateFromDatabase, associateToUpdate);
+        verify(associateMapper, atLeastOnce()).updateAssociate(associateFromDatabase, associateToUpdate);
 
         Assertions.assertNotNull(associateResult, "The associate must not be null");
         Assertions.assertEquals(associateResult.getName(), newName, "The associate name must be null");
@@ -131,13 +124,9 @@ public class AssociateServiceTest extends TestSupport {
 
         var uuid = UUID.randomUUID();
 
+        var associateBuilder = getAssociateBuilder();
 
-        var associateBuilder = Associate.builder()
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe");
-
-        Mockito.when(associateRepository.findById(uuid)).thenReturn(Optional.empty());
+        when(associateRepository.findById(uuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
                 EntityNotFoundException.class,
@@ -152,19 +141,14 @@ public class AssociateServiceTest extends TestSupport {
 
         var uuid = UUID.randomUUID();
 
-        var associate = Associate.builder()
-                .uuid(uuid)
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe")
-                .build();
+        var associate = getAssociateBuilder().uuid(uuid).build();
 
-        Mockito.when(associateRepository.findById(uuid))
+        when(associateRepository.findById(uuid))
                 .thenReturn(Optional.of(associate));
 
         associateService.delete(uuid);
 
-        Mockito.verify(associateRepository, Mockito.atLeastOnce()).delete(associate);
+        verify(associateRepository, atLeastOnce()).delete(associate);
 
     }
 
@@ -173,7 +157,7 @@ public class AssociateServiceTest extends TestSupport {
 
         var uuid = UUID.randomUUID();
 
-        Mockito.when(associateRepository.findById(uuid))
+        when(associateRepository.findById(uuid))
                 .thenReturn(Optional.empty());
 
         Assertions.assertThrows(
@@ -182,5 +166,12 @@ public class AssociateServiceTest extends TestSupport {
                 "Asser failed, should throw EntityNotFoundException"
         );
 
+    }
+
+    private Associate.AssociateBuilder getAssociateBuilder() {
+        return Associate.builder()
+                .document("52223285031")
+                .personType(PersonType.PF)
+                .name("Felipe");
     }
 }

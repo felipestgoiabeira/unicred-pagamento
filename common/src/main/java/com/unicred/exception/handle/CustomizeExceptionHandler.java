@@ -49,13 +49,13 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityExistsException.class)
     public final ResponseEntity<Object> handleAllException(EntityExistsException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.EXPECTATION_FAILED;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public final ResponseEntity<Object> handleAllException(EntityNotFoundException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.EXPECTATION_FAILED;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
     }
 
@@ -102,13 +102,7 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(objectError -> {
                     String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 
-                    String name = objectError.getObjectName();
-
-                    if (objectError instanceof FieldError) {
-                        name = ((FieldError) objectError).getField();
-                    }
-
-                    return String.format("%s %s", name, message);
+                    return String.format("%s", message);
                 })
                 .collect(Collectors.toList());
 
