@@ -6,19 +6,19 @@ import com.unicred.domain.PersonType;
 import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.respository.AssociateRepository;
+import com.unicred.service.impl.AssociateServiceImpl;
 import com.unicred.support.TestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-public class AssociateServiceTest extends TestSupport {
+public class AssociateServiceImplTest extends TestSupport {
 
     @Mock
     private AssociateRepository associateRepository;
@@ -27,7 +27,7 @@ public class AssociateServiceTest extends TestSupport {
     private AssociateMapper associateMapper;
 
     @InjectMocks
-    private AssociateService associateService;
+    private AssociateServiceImpl associateService;
 
     @Test
     void testShouldCreateAssociate() throws EntityExistsException {

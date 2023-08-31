@@ -3,6 +3,7 @@ package com.unicred.controller;
 
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.service.AssociateService;
+import com.unicred.service.impl.AssociateServiceImpl;
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.controller.dto.response.AssociateResponseDTO;
 import com.unicred.mapper.AssociateMapper;
