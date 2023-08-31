@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @Tag(description = "Operações de CRUD para Associado", name = "Associado")
-@RequestMapping("/associado")
+@RequestMapping("/associados")
 @RequiredArgsConstructor
 public class AssociateController {
 

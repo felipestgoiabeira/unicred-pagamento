@@ -1,12 +1,10 @@
-package com.unicred.service;
+package com.unicred.service.impl;
 
 import com.unicred.mapper.AssociateMapper;
 import com.unicred.domain.Associate;
-import com.unicred.domain.PersonType;
 import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.respository.AssociateRepository;
-import com.unicred.service.impl.AssociateServiceImpl;
 import com.unicred.support.TestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,6 +14,7 @@ import org.mockito.Mock;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.unicred.support.Builders.getAssociateBuilder;
 import static org.mockito.Mockito.*;
 
 public class AssociateServiceImplTest extends TestSupport {
@@ -64,12 +63,7 @@ public class AssociateServiceImplTest extends TestSupport {
 
         var uuid = UUID.randomUUID();
 
-        var associate = Associate.builder()
-                .uuid(uuid)
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe")
-                .build();
+        var associate = getAssociateBuilder().uuid(uuid).build();
 
         when(associateRepository.findById(uuid)).thenReturn(Optional.of(associate));
 
@@ -168,10 +162,4 @@ public class AssociateServiceImplTest extends TestSupport {
 
     }
 
-    private Associate.AssociateBuilder getAssociateBuilder() {
-        return Associate.builder()
-                .document("52223285031")
-                .personType(PersonType.PF)
-                .name("Felipe");
-    }
 }

@@ -2,7 +2,6 @@ package com.unicred.controller;
 
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.domain.Associate;
-import com.unicred.domain.PersonType;
 import com.unicred.respository.AssociateRepository;
 import com.unicred.support.ITSupport;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.unicred.support.Builders.*;
 import static com.unicred.support.JsonConvertionUtils.asJsonString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,7 +30,7 @@ public class AssociateControllerTest extends ITSupport {
     @MockBean
     private AssociateRepository associateRepository;
 
-    private static final String ASSOCIATE_API_URL = "/associado";
+    private static final String ASSOCIATE_API_URL = "/associados";
     private static final String MESSAGE_NOT_FOUND = "Associado não encontrado";
 
 
@@ -126,7 +126,7 @@ public class AssociateControllerTest extends ITSupport {
         when(associateRepository.findById(uuid))
                 .thenReturn(Optional.of(associateBuilder.build()));
 
-        when(associateRepository.save(associateUpdated)).thenReturn(associateUpdated);
+        when(associateRepository.save(any())).thenReturn(associateUpdated);
 
         mockMvc.perform(put(ASSOCIATE_API_URL + "/" + uuid)
                         .accept(MediaType.ALL)
@@ -212,10 +212,4 @@ public class AssociateControllerTest extends ITSupport {
                 .document(associate.getDocument());
     }
 
-    private Associate.AssociateBuilder getAssociateBuilder() {
-        return Associate.builder()
-                .name("Felipe")
-                .personType(PersonType.PF)
-                .document("89334126035");
-    }
 }
