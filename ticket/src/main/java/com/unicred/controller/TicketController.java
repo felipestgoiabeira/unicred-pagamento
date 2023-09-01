@@ -141,7 +141,7 @@ public class TicketController {
                     """
     )
     @PostMapping(value = "/lote", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void processBatch(@RequestParam("lote") MultipartFile file) throws IOException {
+    public void processBatch(@RequestParam("lote") MultipartFile file) throws IOException, BusinessException {
         ticketService.processBatch(file);
     }
 

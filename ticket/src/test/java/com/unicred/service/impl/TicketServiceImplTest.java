@@ -184,7 +184,7 @@ class TicketServiceImplTest extends TestSupport {
     }
 
     @Test
-    void testProcessBatch() throws IOException, ExpectationFailedException, EntityNotFoundException {
+    void testProcessBatch() throws IOException, ExpectationFailedException, EntityNotFoundException, BusinessException {
 
         var ticketBuilder = getTicketBuilder().status(TicketStatus.AWAITING_PAYMENT);
 

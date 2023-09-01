@@ -111,35 +111,50 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void processBatch(MultipartFile file) throws IOException {
+    public void processBatch(MultipartFile file) throws IOException, BusinessException {
+
+        var LINE_LENGHT = 70;
 
         var reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 
+        var exceptions = new StringBuilder();
+
+
         var tickets = reader.lines()
                 .parallel()
+                .filter(line -> line.length() == LINE_LENGHT)
                 .map(this::parseLine)
                 .collect(Collectors.toList());
 
         reader.close();
 
         tickets.parallelStream().forEach(ticket -> {
-                try {
-                    var ticketToPay = Ticket.builder()
-                            .uuid(ticket.getUuid())
-                            .value(ticket.getValue())
-                            .build();
-                    payTicket(ticket.getAssociateDocument(), ticketToPay);
+                    try {
+                        var ticketToPay = Ticket.builder()
+                                .uuid(ticket.getUuid())
+                                .value(ticket.getValue())
+                                .build();
+                        payTicket(ticket.getAssociateDocument(), ticketToPay);
 
-                } catch (Exception e) {
-                    log.error("Erro ao processa dívida", e);
+                    } catch (Exception e) {
+                        log.error("Erro ao processar boleto", e);
+                        exceptions.append("Boleto: ")
+                                .append(ticket.getUuid())
+                                .append(" Erro: ")
+                                .append(e.getMessage())
+                                .append("\n");
+                    }
                 }
-            }
         );
+
+        if (!exceptions.isEmpty()) {
+            throw new BusinessException(exceptions.toString());
+        }
     }
 
 
     private TicketFile parseLine(String line) {
-        
+
         var DOCUMENT_START = 0;
         var DOCUMENT_END_CNPJ = 14;
         var DOCUMENT_END_CPF = 11;
