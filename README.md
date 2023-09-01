@@ -1,7 +1,7 @@
 Unicred Pagamento
 ==========
 
-Este projeto contém as API's para realização de operações Associads(CRUD) e operações sobre boletos.
+Este projeto contém as API's para realização de operações sobre Associados(CRUD) e operações sobre Boletos.
  
 Para executar o projeto é necessário ter o Docker e Docker Compose instalados.
 
@@ -21,8 +21,14 @@ O Docker Compose deste projeto possui os seguintes serviços:
 
 Descrição das API's
 -------------
-* API Associados - CRUD para Associados e endpoints para gerar boletos
-* API Boletos - Enpoints para consultar e pagar boletos de associados
+* API Associados - CRUD para Associados e endpoints para gerar boletos.
+
+
+* API Boletos - Enpoints para consultar, pagar boletos de associados e fornece um endpoint para gerar um arquivo com
+os boletos aguardando pagamento do Associado.
+
+
+* API de Arquivos - Fornece um endpoint para realizar o pagamento em lote de dívidas através de um arquivo.
 
 Swagger
 -------------
