@@ -13,4 +13,7 @@ public class AppConfiguration {
     @Value("${topics.create-ticket}")
     private String topicCreateTicket;
 
+    @Value("${apis.ticket.url}")
+    private String ticketApiUrl;
+
 }

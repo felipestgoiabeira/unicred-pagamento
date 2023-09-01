@@ -1,19 +1,18 @@
 package com.unicred.service.impl;
 
-import com.unicred.config.AppConfiguration;
+import com.unicred.component.TicketComponent;
 import com.unicred.domain.Associate;
-import com.unicred.domain.Ticket;
+import com.unicred.exception.BusinessException;
 import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
+import com.unicred.exception.ExpectationFailedException;
 import com.unicred.mapper.AssociateMapper;
 import com.unicred.respository.AssociateRepository;
 import com.unicred.service.AssociateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,6 +21,7 @@ import java.util.UUID;
 public class AssociateServiceImpl implements AssociateService {
 
     private final String MESSAGE_NOT_FOUND = "Associado não encontrado";
+    private final TicketComponent ticketComponent;
 
     private final AssociateRepository associateRepository;
     private final AssociateMapper associateMapper;
@@ -62,15 +62,31 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     @Override
-    public void delete(UUID id) throws EntityNotFoundException {
-        var associate = associateRepository.findById(id);
+    public void delete(UUID id) throws EntityNotFoundException, ExpectationFailedException, BusinessException {
+        var associateOptional = associateRepository.findById(id);
 
-        if (associate.isEmpty()) {
-
+        if (associateOptional.isEmpty()) {
             throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
+        var associate = associateOptional.get();
 
-        associateRepository.delete(associate.get());
+        validateAwaitingPayments(associate);
+
+        associateRepository.delete(associateOptional.get());
+    }
+
+    private void validateAwaitingPayments(Associate associate) throws
+            ExpectationFailedException, BusinessException {
+
+        var tickerAwaitingPayment = ticketComponent.getTickets(associate.getUuid()).getTickets().stream()
+                .filter(ticket ->
+                        ticket.getStatus().equals("AGUARDANDO_PAGAMENTO") || ticket.getStatus().equals("VENCIDO")
+                )
+                .findFirst();
+
+        if (tickerAwaitingPayment.isPresent()) {
+            throw new BusinessException("O associado possui boletos que ainda não foram pagos!");
+        }
     }
 
     @Override
@@ -80,6 +96,7 @@ public class AssociateServiceImpl implements AssociateService {
         if (associate.isEmpty()) {
             throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
+
 
         return associate.get();
     }

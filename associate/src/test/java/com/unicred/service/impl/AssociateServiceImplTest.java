@@ -1,5 +1,7 @@
 package com.unicred.service.impl;
 
+import com.unicred.exception.BusinessException;
+import com.unicred.exception.ExpectationFailedException;
 import com.unicred.mapper.AssociateMapper;
 import com.unicred.domain.Associate;
 import com.unicred.exception.EntityExistsException;
@@ -131,7 +133,7 @@ public class AssociateServiceImplTest extends TestSupport {
     }
 
     @Test
-    void testShouldDeletAssociate() throws EntityNotFoundException {
+    void testShouldDeletAssociate() throws EntityNotFoundException, BusinessException, ExpectationFailedException {
 
         var uuid = UUID.randomUUID();
 

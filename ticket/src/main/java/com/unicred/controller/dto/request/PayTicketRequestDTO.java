@@ -31,8 +31,8 @@ public class PayTicketRequestDTO {
     @NotBlank(message = "O UUID do boleto deve ser informado")
     private String ticketUUID;
 
-    @JsonProperty("documento_pagador")
     @CpfCnpj
+    @JsonProperty("documento_pagador")
     @NotBlank(message = "O documento do pagador deve ser informado")
     private String payerDocument;
 

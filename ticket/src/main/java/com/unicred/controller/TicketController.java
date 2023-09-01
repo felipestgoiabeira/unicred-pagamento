@@ -1,6 +1,7 @@
 package com.unicred.controller;
 
 import com.unicred.controller.dto.request.PayTicketRequestDTO;
+import com.unicred.controller.dto.response.TicketDTO;
 import com.unicred.controller.dto.response.TicketResponseDTO;
 import com.unicred.exception.BusinessException;
 import com.unicred.exception.EntityNotFoundException;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -43,9 +43,9 @@ public class TicketController {
 
     @GetMapping("{uuid_associado}")
     @Operation(summary = "Retorna os boletos do associado informado por UUID")
-    public List<TicketResponseDTO> getTickets(@PathVariable("uuid_associado") UUID uuid)
+    public TicketResponseDTO getTickets(@PathVariable("uuid_associado") UUID uuid)
             throws ExpectationFailedException, EntityNotFoundException {
-        return ticketMapper.toTicketResponseDTO(ticketService.getTicketsFromAssociate(uuid));
+        return ticketMapper.toTicketResponseDTO(0, ticketService.getTicketsFromAssociate(uuid));
     }
 
     @PostMapping
@@ -89,7 +89,7 @@ public class TicketController {
             )
     }
     )
-    public TicketResponseDTO payTicket(@RequestBody @Valid PayTicketRequestDTO payTicketRequestDTO)
+    public TicketDTO payTicket(@RequestBody @Valid PayTicketRequestDTO payTicketRequestDTO)
             throws ExpectationFailedException, EntityNotFoundException, BusinessException {
 
         var response = ticketService.payTicket(

@@ -22,8 +22,7 @@ import java.util.UUID;
 import static com.unicred.support.JsonConvertionUtils.*;
 import static com.unicred.support.TicketBuilder.getTicketBuilder;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,6 +66,7 @@ class TicketControllerTest extends ITSupport {
         var payTickerRequest = PayTicketRequestDTO.builder()
                 .ticketUUID(UUID.randomUUID().toString())
                 .payerName("Felipe Goiabeira")
+                .associateDocument("97287006014")
                 .payerDocument("97287006014")
                 .value(new BigDecimal("20.00"))
                 .build();
@@ -77,7 +77,7 @@ class TicketControllerTest extends ITSupport {
         when(ticketRepository.findByUuidAndAssociateUUID(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(getTicketBuilder().build()));
 
-        mockMvc.perform(patch(TICKET_API_URL)
+        mockMvc.perform(post(TICKET_API_URL)
                         .accept(MediaType.ALL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(payTickerRequest))

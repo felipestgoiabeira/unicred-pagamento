@@ -3,8 +3,10 @@ package com.unicred.controller;
 
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.controller.dto.response.AssociateResponseDTO;
+import com.unicred.exception.BusinessException;
 import com.unicred.exception.EntityExistsException;
 import com.unicred.exception.EntityNotFoundException;
+import com.unicred.exception.ExpectationFailedException;
 import com.unicred.mapper.AssociateMapper;
 import com.unicred.service.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,7 +73,7 @@ public class AssociateController {
     @DeleteMapping("{uuid}")
     @Operation(summary = "Exclua um associado.")
     public void delete(@PathVariable("uuid") UUID id)
-            throws EntityNotFoundException {
+            throws EntityNotFoundException, BusinessException, ExpectationFailedException {
 
         associateService.delete(id);
     }

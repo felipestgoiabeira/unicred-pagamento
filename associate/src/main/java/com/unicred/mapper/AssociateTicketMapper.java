@@ -1,7 +1,9 @@
 package com.unicred.mapper;
 
+import com.unicred.component.impl.dto.TicketResponseDTO;
 import com.unicred.controller.dto.request.CreateTicketDTO;
 import com.unicred.domain.Ticket;
+import com.unicred.domain.component.TicketResponse;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -20,4 +22,6 @@ public interface AssociateTicketMapper {
                 .peek(ticket -> ticket.setAssociateUUID(uuid))
                 .collect(Collectors.toList());
     }
+
+    TicketResponse toTicketResponse(TicketResponseDTO ticketResponseDTO);
 }

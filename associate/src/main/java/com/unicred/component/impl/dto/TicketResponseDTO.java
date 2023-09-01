@@ -1,4 +1,4 @@
-package com.unicred.controller.dto.response;
+package com.unicred.component.impl.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

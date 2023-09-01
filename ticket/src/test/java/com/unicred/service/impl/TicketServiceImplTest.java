@@ -176,7 +176,7 @@ class TicketServiceImplTest extends TestSupport {
                 "Assert failed, should throw BusinessException"
         );
 
-        assertEquals("Pagamento com valor incorreto", exception.getMessage());
+        assertEquals("Pagamento com valor incorreto!", exception.getMessage());
     }
 
 }
