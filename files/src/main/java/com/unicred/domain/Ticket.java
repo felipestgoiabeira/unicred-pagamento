@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "boleto", indexes = @Index(name = "idx_boleto", columnList = "uuid,uuid_associado", unique = true))
+@Table(name = "boleto")
 public class Ticket {
 
     @Id
