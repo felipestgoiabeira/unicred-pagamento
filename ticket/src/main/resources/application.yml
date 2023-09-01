@@ -3,7 +3,7 @@ topics:
 
 apis:
   associate:
-    url: http://localhost:8080/api/associados
+    url: http://associateservice:8080/api/associados
 
 spring:
   datasource:

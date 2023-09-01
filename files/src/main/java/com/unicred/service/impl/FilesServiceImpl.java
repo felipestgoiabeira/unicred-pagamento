@@ -137,14 +137,14 @@ public class FilesServiceImpl implements FilesService {
 
         var DOCUMENT_START = 0;
         var DOCUMENT_END_CNPJ = 14;
-        var DOCUMENT_END_CPF = 11;
+        var DOCUMENT_START_CPF = 3;
         var UUID_END = 50;
         var VALUE_END = 68;
 
         var document = line.substring(DOCUMENT_START, DOCUMENT_END_CNPJ);
 
         if (document.startsWith("000")) {
-            document = document.substring(DOCUMENT_START, DOCUMENT_END_CPF);
+            document = document.substring(DOCUMENT_START_CPF, DOCUMENT_END_CNPJ);
         }
 
         var uuid = line.substring(DOCUMENT_END_CNPJ, UUID_END);

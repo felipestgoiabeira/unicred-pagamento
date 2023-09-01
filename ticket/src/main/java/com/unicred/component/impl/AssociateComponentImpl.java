@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AssociateComponentImpl implements AssociateComponent {
@@ -34,8 +36,10 @@ public class AssociateComponentImpl implements AssociateComponent {
             return associateMapper.toAssociateResponse(associate.getBody());
 
         } catch (HttpClientErrorException.NotFound exception) {
+
             throw new EntityNotFoundException("Associado não encontrado");
         } catch (RestClientException exception) {
+            log.error("Error:", exception);
             throw new ExpectationFailedException();
         }
     }

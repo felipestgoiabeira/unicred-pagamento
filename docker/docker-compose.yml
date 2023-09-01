@@ -2,6 +2,7 @@ version: '3.5'
 
 services:
   associateservice:
+      hostname: associateservice
       build:
         context: ..
         dockerfile: docker/Dockerfile
