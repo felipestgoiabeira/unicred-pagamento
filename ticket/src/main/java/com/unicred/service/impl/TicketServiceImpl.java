@@ -75,7 +75,7 @@ public class TicketServiceImpl implements TicketService {
     public byte[] getTicketsAwaitingPayment(UUID associateUUID)
             throws ExpectationFailedException, EntityNotFoundException {
 
-        var valueSize = 20;
+        var VALUE_LENGTH = 20;
 
         var associate = associateComponent.getAssociate(associateUUID);
 
@@ -85,18 +85,21 @@ public class TicketServiceImpl implements TicketService {
         StringBuilder content = new StringBuilder();
 
         for (Ticket ticket : tickets) {
-            content
-                    .append(associate.getDocument());
+            var document = associate.getDocument();
+
             if (associate.getPersonType().equals("PF")) {
                 content.append("000");
             }
+
+            content
+                    .append(document);
 
             content.append(ticket.getUuid());
 
             var value = ticket.getValue().toString().replace(".", "");
 
-            if (value.length() < valueSize) {
-                IntStream.range(0, valueSize - value.length()).forEach(i -> content.append("0"));
+            if (value.length() < VALUE_LENGTH) {
+                IntStream.range(0, VALUE_LENGTH - value.length()).forEach(i -> content.append("0"));
             }
 
             content.append(value)
@@ -136,16 +139,24 @@ public class TicketServiceImpl implements TicketService {
 
 
     private TicketFile parseLine(String line) {
-        var document = line.substring(0, 14);
-        if (document.endsWith("000")) {
-            document = document.substring(0, 11);
+        
+        var DOCUMENT_START = 0;
+        var DOCUMENT_END_CNPJ = 14;
+        var DOCUMENT_END_CPF = 11;
+        var UUID_END = 50;
+        var VALUE_END = 68;
+
+        var document = line.substring(DOCUMENT_START, DOCUMENT_END_CNPJ);
+
+        if (document.startsWith("000")) {
+            document = document.substring(DOCUMENT_START, DOCUMENT_END_CPF);
         }
 
-        var uuid = line.substring(14, 50);
+        var uuid = line.substring(DOCUMENT_END_CNPJ, UUID_END);
 
-        var valueString = line.substring(50, 67).replaceAll("^0+(?=.)", "");
+        var valueString = line.substring(UUID_END, VALUE_END).replaceAll("^0+(?=.)", "");
 
-        var decimalValue = line.substring(67);
+        var decimalValue = line.substring(VALUE_END);
 
         var value = new BigDecimal(valueString + "." + decimalValue);
 

@@ -110,6 +110,7 @@ public class TicketController {
 
 
         var fileBytes = ticketService.getTicketsAwaitingPayment(uuid);
+
         var resource = new ByteArrayResource(fileBytes);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);

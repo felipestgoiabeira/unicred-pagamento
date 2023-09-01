@@ -24,7 +24,7 @@ public class TicketListener {
         try {
             log.info("Processing ticket {}", ticketDTO.getAssociateUUID());
 
-            Ticket ticket = ticketMapper.toTicket(ticketDTO);
+            var ticket = ticketMapper.toTicket(ticketDTO);
             ticket.setStatus(TicketStatus.AWAITING_PAYMENT);
 
             ticketRepository.save(ticket);

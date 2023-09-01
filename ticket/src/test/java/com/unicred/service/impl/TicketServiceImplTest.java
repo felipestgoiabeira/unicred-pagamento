@@ -4,17 +4,22 @@ import com.unicred.component.AssociateComponent;
 import com.unicred.component.dto.AssociateResponseDTO;
 import com.unicred.domain.Ticket;
 import com.unicred.domain.TicketStatus;
+import com.unicred.domain.component.AssociateResponse;
 import com.unicred.exception.BusinessException;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.exception.ExpectationFailedException;
 import com.unicred.repository.TicketRepository;
 import com.unicred.support.TestSupport;
-import org.apache.kafka.common.protocol.types.Field;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +27,7 @@ import java.util.UUID;
 
 import static com.unicred.support.TicketBuilder.getTicketBuilder;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TicketServiceImplTest extends TestSupport {
 
@@ -41,7 +45,7 @@ class TicketServiceImplTest extends TestSupport {
     void testShouldGetTicketsFromAssociate() throws ExpectationFailedException, EntityNotFoundException {
         var uuid = UUID.randomUUID();
 
-        var associate = AssociateResponseDTO.builder().build();
+        var associate = AssociateResponse.builder().build();
 
         when(associateComponent.getAssociate(any())).thenReturn(associate);
 
@@ -179,4 +183,51 @@ class TicketServiceImplTest extends TestSupport {
         assertEquals("Pagamento com valor incorreto!", exception.getMessage());
     }
 
+    @Test
+    void testProcessBatch() throws IOException, ExpectationFailedException, EntityNotFoundException {
+
+        var ticketBuilder = getTicketBuilder().status(TicketStatus.AWAITING_PAYMENT);
+
+        var associate = AssociateResponseDTO.builder().build();
+
+        when(associateComponent.getAssociateByDocument(any())).thenReturn(associate);
+
+        when(ticketRepository.findByUuidAndAssociateUUID(any(), any()))
+                .thenReturn(Optional.of(ticketBuilder.status(TicketStatus.AWAITING_PAYMENT).build()));
+
+
+        byte[] fileContent = Files.readAllBytes(Paths.get("src/test/resources/files/boletos"));
+
+
+        MultipartFile multipartFile = new MockMultipartFile(
+                "boletos",
+                "boletos",
+                "text/plain",
+                fileContent
+        );
+
+        ticketService.processBatch(multipartFile);
+
+        verify(associateComponent, times(24)).getAssociateByDocument(anyString());
+    }
+
+    @Test
+    void testGetTicketsAwaitingPayment() throws ExpectationFailedException, EntityNotFoundException {
+
+        var ticketBuilder = getTicketBuilder().status(TicketStatus.AWAITING_PAYMENT);
+
+        var associate = AssociateResponse.builder().personType("PF").build();
+
+        when(associateComponent.getAssociate(any())).thenReturn(associate);
+
+        when(ticketRepository.findByAssociateUUIDAndStatus(any(), any()))
+                .thenReturn(List.of(ticketBuilder.build()));
+
+        var uuid = UUID.randomUUID();
+
+        var result = ticketService.getTicketsAwaitingPayment(uuid);
+
+        assertNotNull(result, "Result must not be null");
+
+    }
 }
