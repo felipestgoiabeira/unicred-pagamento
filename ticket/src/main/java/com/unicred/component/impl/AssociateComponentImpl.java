@@ -3,8 +3,10 @@ package com.unicred.component.impl;
 import com.unicred.component.AssociateComponent;
 import com.unicred.component.dto.AssociateResponseDTO;
 import com.unicred.config.AppConfiguration;
+import com.unicred.domain.component.AssociateResponse;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.exception.ExpectationFailedException;
+import com.unicred.mapper.AssociateMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,16 +21,17 @@ public class AssociateComponentImpl implements AssociateComponent {
 
     private final RestTemplate restTemplate;
     private final AppConfiguration appConfiguration;
+    private final AssociateMapper associateMapper;
 
     @Override
-    public AssociateResponseDTO getAssociate(UUID uuid) throws
+    public AssociateResponse getAssociate(UUID uuid) throws
             ExpectationFailedException, EntityNotFoundException {
 
         try {
             var associate = restTemplate
                     .getForEntity(appConfiguration.getAssociateApiUrl() + "/" + uuid, AssociateResponseDTO.class);
 
-            return associate.getBody();
+            return associateMapper.toAssociateResponse(associate.getBody());
 
         } catch (HttpClientErrorException.NotFound exception) {
             throw new EntityNotFoundException("Associado não encontrado");
