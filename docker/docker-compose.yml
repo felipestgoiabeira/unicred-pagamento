@@ -7,7 +7,7 @@ services:
         dockerfile: docker/Dockerfile
       command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
       depends_on:
-        - dbassociate
+        - associatedb
       ports:
         - 8080:8080
 
@@ -17,13 +17,23 @@ services:
       dockerfile: docker/Dockerfile
     command: bash -c "java -jar ticket/application.jar --spring.profiles.active=production"
     depends_on:
-      - dbticket
+      - ticketdb
     ports:
       - 8081:8081
 
-  dbassociate:
+  filesservice:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: bash -c "java -jar files/application.jar --spring.profiles.active=production"
+    depends_on:
+      - ticketdb
+    ports:
+      - 8083:8083
+
+  associatedb:
+    hostname: associatedb
     image: postgres
-    hostname: db
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 1234
@@ -31,15 +41,15 @@ services:
     ports:
       - 5432:5432
 
-  dbticket:
+  ticketdb:
+    hostname: ticketdb
     image: postgres
-    hostname: db
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: UNICRED_BOLETO
     ports:
-      - 5433:5432
+      - 5435:5432
 
   zookeeper:
     container_name: zookeeper

@@ -106,29 +106,4 @@ class TicketControllerTest extends ITSupport {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void processBatch() throws Exception {
-        var ticketBuilder = getTicketBuilder().status(TicketStatus.AWAITING_PAYMENT);
-
-
-        when(restTemplate.getForEntity(anyString(), any()))
-                .thenReturn(ResponseEntity.ok(AssociateResponseDTO.builder().personType("PJ").build()));
-
-        when(ticketRepository.findByUuidAndAssociateUUID(any(), any()))
-                .thenReturn(Optional.of(ticketBuilder.status(TicketStatus.AWAITING_PAYMENT).build()));
-
-        byte[] fileContent = Files.readAllBytes(Paths.get("src/test/resources/files/boletos"));
-
-
-        var multipartFile = new MockMultipartFile(
-                "lote",
-                "lote",
-                "text/plain",
-                fileContent
-        );
-
-        mockMvc.perform(multipart(TICKET_API_URL + "/lote")
-                        .file(multipartFile))
-                .andExpect(status().isOk());
-    }
 }

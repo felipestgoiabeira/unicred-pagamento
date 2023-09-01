@@ -29,7 +29,7 @@ import static com.unicred.support.TicketBuilder.getTicketBuilder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TicketServiceImplTest extends TestSupport {
+class FilesServiceImplTest extends TestSupport {
 
     @Mock
     private AssociateComponent associateComponent;
@@ -37,40 +37,11 @@ class TicketServiceImplTest extends TestSupport {
     private TicketRepository ticketRepository;
 
     @InjectMocks
-    private TicketServiceImpl ticketService;
+    private FilesServiceImpl ticketService;
 
     private static final String ASSOCIATE_DOCUMENT = "02922466094";
 
-    @Test
-    void testShouldGetTicketsFromAssociate() throws ExpectationFailedException, EntityNotFoundException {
-        var uuid = UUID.randomUUID();
-
-        var associate = AssociateResponse.builder().build();
-
-        when(associateComponent.getAssociate(any())).thenReturn(associate);
-
-        when(ticketRepository.findByAssociateUUID(uuid)).thenReturn(List.of(Ticket.builder().build()));
-
-        var tickets = ticketService.getTicketsFromAssociate(uuid);
-
-        assertFalse(tickets.isEmpty(), "The list of tickets must not be empty");
-
-    }
-
-    @Test
-    void testWhenGetTicketsFromAssociateShouldThrowNotFound() throws ExpectationFailedException, EntityNotFoundException {
-        var uuid = UUID.randomUUID();
-
-        when(associateComponent.getAssociate(any()))
-                .thenThrow(new EntityNotFoundException(""));
-
-        assertThrows(
-                EntityNotFoundException.class,
-                () -> ticketService.getTicketsFromAssociate(uuid),
-                "Assert failed, should throw EntityNotFoundException"
-        );
-    }
-
+    
     @Test
     void testShouldPayTicket() throws BusinessException, ExpectationFailedException, EntityNotFoundException {
 
@@ -184,22 +155,33 @@ class TicketServiceImplTest extends TestSupport {
     }
 
     @Test
-    void testGetTicketsAwaitingPayment() throws ExpectationFailedException, EntityNotFoundException {
+    void testProcessBatch() throws IOException, ExpectationFailedException, EntityNotFoundException, BusinessException {
 
         var ticketBuilder = getTicketBuilder().status(TicketStatus.AWAITING_PAYMENT);
 
-        var associate = AssociateResponse.builder().personType("PF").build();
+        var associate = AssociateResponseDTO.builder().build();
 
-        when(associateComponent.getAssociate(any())).thenReturn(associate);
+        when(associateComponent.getAssociateByDocument(nullable(String.class))).thenReturn(associate);
 
-        when(ticketRepository.findByAssociateUUIDAndStatus(any(), any()))
-                .thenReturn(List.of(ticketBuilder.build()));
 
-        var uuid = UUID.randomUUID();
+        when( ticketRepository
+                .findByUuidAndAssociateUUID(any(), any()))
+                .thenReturn(Optional.of(Ticket.builder().dueDate(LocalDate.now()).value(new BigDecimal("20.00")).status(TicketStatus.AWAITING_PAYMENT).build()));
 
-        var result = ticketService.getTicketsAwaitingPayment(uuid);
 
-        assertNotNull(result, "Result must not be null");
+        byte[] fileContent = Files.readAllBytes(Paths.get("src/test/resources/files/boletos"));
 
+
+        MultipartFile multipartFile = new MockMultipartFile(
+                "boletos",
+                "boletos",
+                "text/plain",
+                fileContent
+        );
+
+        ticketService.processBatch(multipartFile);
+
+        verify(associateComponent, times(1)).getAssociateByDocument(anyString());
     }
+
 }

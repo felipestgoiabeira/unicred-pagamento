@@ -1,0 +1,25 @@
+topics:
+  create-ticket: create-ticket
+
+apis:
+  associate:
+    url: http://localhost:8080/api/associados
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: 1234
+    url: jdbc:postgresql://localhost:5433/UNICRED_BOLETO
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+server:
+  servlet:
+    context-path: /api
+  port: 8083

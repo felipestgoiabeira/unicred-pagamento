@@ -7,6 +7,7 @@
         <module>common</module>
         <module>associate</module>
         <module>ticket</module>
+        <module>files</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

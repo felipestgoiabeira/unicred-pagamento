@@ -20,6 +20,4 @@ public interface TicketService {
 
     byte[] getTicketsAwaitingPayment(UUID associateUUID)
             throws ExpectationFailedException, EntityNotFoundException;
-
-    void processBatch(MultipartFile file) throws IOException, BusinessException;
 }
