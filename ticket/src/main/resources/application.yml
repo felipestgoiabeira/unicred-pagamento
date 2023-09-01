@@ -24,16 +24,24 @@ spring:
     consumer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      max-poll-records: 1
       enable-auto-commit: false
       auto-offset-reset: earliest
       group-id: "unicred-payment"
       client-id: "unicred-payment"
+      max.poll.records: 500
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     listener:
       ack-mode: manual_immediate
+      concurrency: 15
+    topics:
+      create-ticket:
+        partitions: 10
+  servlet:
+    multipart:
+      max-request-size: 10GB
+      max-file-size: 10GB
 
 server:
   servlet:
