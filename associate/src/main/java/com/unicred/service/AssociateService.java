@@ -10,9 +10,12 @@ import java.util.UUID;
 
 public interface AssociateService {
     Associate create(Associate associate) throws EntityExistsException;
+
     Associate findByUUID(UUID id) throws EntityNotFoundException;
+
     Associate update(UUID id, Associate associateUpdate) throws EntityNotFoundException;
+
     void delete(UUID id) throws EntityNotFoundException;
 
-    Associate createTickets(UUID id, List<Ticket> tickets) throws EntityNotFoundException;
+    Associate findByDocument(String document) throws EntityNotFoundException;
 }

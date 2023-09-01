@@ -26,10 +26,6 @@ public class AssociateServiceImpl implements AssociateService {
     private final AssociateRepository associateRepository;
     private final AssociateMapper associateMapper;
 
-    private final KafkaTemplate<String, Ticket> producer;
-    private final AppConfiguration appConfiguration;
-
-
     @Override
     public Associate create(Associate associate) throws EntityExistsException {
 
@@ -78,18 +74,14 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     @Override
-    public Associate createTickets(UUID id, List<Ticket> tickets) throws EntityNotFoundException {
-        var associateOptional = associateRepository.findById(id);
+    public Associate findByDocument(String document) throws EntityNotFoundException {
+        var associate = associateRepository.findByDocument(document);
 
-        if (associateOptional.isEmpty()) {
+        if (associate.isEmpty()) {
             throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
         }
 
-        var associate = associateOptional.get();
-
-        tickets.parallelStream().forEach(ticket -> producer
-                .send(appConfiguration.getTopicCreateTicket(), String.valueOf(ticket.hashCode()), ticket));
-
-        return associateRepository.save(associate);
+        return associate.get();
     }
 }
+

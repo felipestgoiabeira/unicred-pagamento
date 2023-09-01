@@ -1,13 +1,13 @@
 package com.unicred.controller;
 
 
-import com.unicred.exception.EntityNotFoundException;
-import com.unicred.service.AssociateService;
-import com.unicred.service.impl.AssociateServiceImpl;
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.controller.dto.response.AssociateResponseDTO;
-import com.unicred.mapper.AssociateMapper;
 import com.unicred.exception.EntityExistsException;
+import com.unicred.exception.EntityNotFoundException;
+import com.unicred.mapper.AssociateMapper;
+import com.unicred.service.AssociateService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class AssociateController {
     public final AssociateMapper associateMapper;
 
     @PostMapping
+    @Operation(summary = "Crie um associado.")
     @ResponseStatus(HttpStatus.CREATED)
     public AssociateResponseDTO create(@RequestBody @Valid AssociateRequestDTO associateRequestDTO)
             throws EntityExistsException {
@@ -37,7 +38,17 @@ public class AssociateController {
         return associateMapper.toAssociateResponseDTO(associate);
     }
 
+    @GetMapping("/documento/{documento}")
+    @Operation(summary = "Busque um associado por documento.")
+    public AssociateResponseDTO getAssociateByDocument(@PathVariable("documento") String document) throws EntityNotFoundException {
+
+        var associate = associateService.findByDocument(document);
+
+        return associateMapper.toAssociateResponseDTO(associate);
+    }
+
     @GetMapping("{uuid}")
+    @Operation(summary = "Busque um associado pelo UUID.")
     public AssociateResponseDTO getAssociateByUUID(@PathVariable("uuid") UUID id) throws EntityNotFoundException {
 
         var associate = associateService.findByUUID(id);
@@ -46,6 +57,7 @@ public class AssociateController {
     }
 
     @PutMapping("{uuid}")
+    @Operation(summary = "Atualize um associado.")
     public AssociateResponseDTO update(@PathVariable("uuid") UUID id,
                                        @RequestBody @Valid AssociateRequestDTO associateRequestDTO)
             throws EntityNotFoundException {
@@ -57,6 +69,7 @@ public class AssociateController {
     }
 
     @DeleteMapping("{uuid}")
+    @Operation(summary = "Exclua um associado.")
     public void delete(@PathVariable("uuid") UUID id)
             throws EntityNotFoundException {
 

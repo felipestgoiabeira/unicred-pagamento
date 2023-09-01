@@ -1,6 +1,10 @@
 topics:
   create-ticket: create-ticket
 
+apis:
+  associate:
+    url: http://localhost:8080/api/associados
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

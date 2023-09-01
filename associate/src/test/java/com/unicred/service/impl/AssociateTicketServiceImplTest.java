@@ -80,7 +80,7 @@ class AssociateTicketServiceImplTest extends TestSupport {
         Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> associateTicketService.createTickets(uuid, tickets),
-                "Asser failed, should throw EntityNotFoundException"
+                "Assert failed, should throw EntityNotFoundException"
         );
 
     }

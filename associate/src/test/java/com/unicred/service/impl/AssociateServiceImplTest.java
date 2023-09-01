@@ -54,7 +54,7 @@ public class AssociateServiceImplTest extends TestSupport {
         Assertions.assertThrows(
                 EntityExistsException.class,
                 () -> associateService.create(associateBuilder.build()),
-                "Asser failed, should throw EntityExistsException"
+                "Assert failed, should throw EntityExistsException"
         );
     }
 
@@ -82,7 +82,7 @@ public class AssociateServiceImplTest extends TestSupport {
         Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> associateService.findByUUID(uuid),
-                "Asser failed, should throw EntityNotFoundException"
+                "Assert failed, should throw EntityNotFoundException"
         );
     }
 
@@ -125,7 +125,7 @@ public class AssociateServiceImplTest extends TestSupport {
         Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> associateService.update(uuid, associateBuilder.build()),
-                "Asser failed, should throw EntityNotFoundException"
+                "Assert failed, should throw EntityNotFoundException"
         );
         
     }
@@ -157,7 +157,7 @@ public class AssociateServiceImplTest extends TestSupport {
         Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> associateService.delete(uuid),
-                "Asser failed, should throw EntityNotFoundException"
+                "Assert failed, should throw EntityNotFoundException"
         );
 
     }

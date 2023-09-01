@@ -10,8 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -37,5 +42,43 @@ public class AssociateTicketServiceImpl implements AssociateTicketService {
         tickets.parallelStream().forEach(ticket -> producer
                 .send(appConfiguration.getTopicCreateTicket(), String.valueOf(ticket.hashCode()), ticket));
 
+    }
+
+    @Override
+    public void generate(UUID id, Integer amount, LocalDate dueDate) throws EntityNotFoundException {
+        var associateOptional = associateRepository.findById(id);
+
+        if (associateOptional.isEmpty()) {
+            throw new EntityNotFoundException(MESSAGE_NOT_FOUND);
+        }
+
+        IntStream.range(0, amount).forEach(
+                number -> {
+
+                    var ticket = Ticket.builder()
+                            .associateUUID(id)
+                            .value(generateRandomBigDecimal())
+                            .dueDate(dueDate)
+                            .build();
+
+                    producer
+                            .send(appConfiguration.getTopicCreateTicket(), String.valueOf(ticket.hashCode()), ticket);
+
+                }
+        );
+
+    }
+
+    public static BigDecimal generateRandomBigDecimal() {
+        var minValue = BigDecimal.ZERO;
+        var maxValue = new BigDecimal("100000");
+        var scale = 2;
+        var random = new Random();
+
+        var randomBigDecimal = minValue
+                .add(BigDecimal.valueOf(random.nextDouble())
+                        .multiply(maxValue.subtract(minValue)));
+
+        return randomBigDecimal.setScale(scale, RoundingMode.HALF_UP);
     }
 }
