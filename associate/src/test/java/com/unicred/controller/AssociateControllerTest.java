@@ -1,15 +1,24 @@
 package com.unicred.controller;
 
+import com.unicred.component.impl.dto.TicketDTO;
+import com.unicred.component.impl.dto.TicketResponseDTO;
 import com.unicred.controller.dto.request.AssociateRequestDTO;
 import com.unicred.domain.Associate;
+import com.unicred.domain.component.Ticket;
+import com.unicred.domain.component.TicketResponse;
 import com.unicred.respository.AssociateRepository;
 import com.unicred.support.ITSupport;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +38,9 @@ public class AssociateControllerTest extends ITSupport {
 
     @MockBean
     private AssociateRepository associateRepository;
+
+    @MockBean
+    private RestTemplate restTemplate;
 
     private static final String ASSOCIATE_API_URL = "/associados";
     private static final String MESSAGE_NOT_FOUND = "Associado não encontrado";
@@ -168,6 +180,14 @@ public class AssociateControllerTest extends ITSupport {
 
         UUID uuid = UUID.randomUUID();
         var associate = getAssociateBuilder().uuid(uuid).build();
+
+        TicketResponseDTO ticketResponse = TicketResponseDTO.builder()
+                .tickets(List.of(TicketDTO.builder().status("PAGO").build()))
+                .build();
+
+        when(restTemplate.getForEntity(Mockito.anyString(), Mockito.any())).thenReturn(
+                ResponseEntity.of(Optional.of(ticketResponse))
+        );
 
         when(associateRepository.findById(uuid))
                 .thenReturn(Optional.of(associate));

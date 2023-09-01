@@ -4,7 +4,6 @@ import com.unicred.component.dto.AssociateResponseDTO;
 import com.unicred.controller.dto.request.PayTicketRequestDTO;
 import com.unicred.repository.TicketRepository;
 import com.unicred.support.ITSupport;
-import com.unicred.support.JsonConvertionUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.unicred.support.JsonConvertionUtils.*;
+import static com.unicred.support.JsonConvertionUtils.asJsonString;
 import static com.unicred.support.TicketBuilder.getTicketBuilder;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

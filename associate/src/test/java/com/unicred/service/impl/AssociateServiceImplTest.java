@@ -1,5 +1,8 @@
 package com.unicred.service.impl;
 
+import com.unicred.component.TicketComponent;
+import com.unicred.domain.component.Ticket;
+import com.unicred.domain.component.TicketResponse;
 import com.unicred.exception.BusinessException;
 import com.unicred.exception.ExpectationFailedException;
 import com.unicred.mapper.AssociateMapper;
@@ -12,7 +15,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +31,9 @@ public class AssociateServiceImplTest extends TestSupport {
 
     @Mock
     private AssociateMapper associateMapper;
+
+    @Mock
+    private TicketComponent ticketComponent;
 
     @InjectMocks
     private AssociateServiceImpl associateService;
@@ -139,6 +147,14 @@ public class AssociateServiceImplTest extends TestSupport {
 
         var associate = getAssociateBuilder().uuid(uuid).build();
 
+        TicketResponse ticketResponse = TicketResponse.builder()
+                .tickets(List.of(Ticket.builder().status("PAGO").build()))
+                .build();
+
+        when(ticketComponent.getTickets(Mockito.any())).thenReturn(
+                ticketResponse
+        );
+
         when(associateRepository.findById(uuid))
                 .thenReturn(Optional.of(associate));
 
@@ -149,9 +165,17 @@ public class AssociateServiceImplTest extends TestSupport {
     }
 
     @Test
-    void testShouldThrowEntityNotFoundExceptionWhenDeletAssociate() {
+    void testShouldThrowEntityNotFoundExceptionWhenDeletAssociate() throws ExpectationFailedException {
 
         var uuid = UUID.randomUUID();
+
+        TicketResponse ticketResponse = TicketResponse.builder()
+                .tickets(List.of(Ticket.builder().status("PAGO").build()))
+                .build();
+
+        when(ticketComponent.getTickets(Mockito.any())).thenReturn(
+                ticketResponse
+        );
 
         when(associateRepository.findById(uuid))
                 .thenReturn(Optional.empty());
