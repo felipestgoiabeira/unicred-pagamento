@@ -4,6 +4,7 @@ package com.unicred.exception.handle;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.unicred.exception.BusinessException;
 import com.unicred.exception.EntityNotFoundException;
 import com.unicred.exception.model.ExceptionModel;
 import com.unicred.exception.EntityExistsException;
@@ -41,11 +42,11 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
             = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
             + "o problema persistir, entre em contato com o administrador do sistema.";
 
-//    @ExceptionHandler(BusinessException.class)
-//    public final ResponseEntity<Object> handleAllException(BusinessException ex, WebRequest request) throws Exception {
-//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
-//    }
+    @ExceptionHandler(BusinessException.class)
+    public final ResponseEntity<Object> handleAllException(BusinessException ex, WebRequest request) throws Exception {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleExceptionInternal(ex, toExceptionModel(status, ex.getMessage()), new HttpHeaders(), status, request);
+    }
 
     @ExceptionHandler(EntityExistsException.class)
     public final ResponseEntity<Object> handleAllException(EntityExistsException ex, WebRequest request) {

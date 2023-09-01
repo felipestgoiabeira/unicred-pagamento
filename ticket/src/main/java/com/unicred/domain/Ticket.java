@@ -37,10 +37,10 @@ public class Ticket {
     @Column(name = "documento_pagador", length = 14)
     private String payerDocument;
 
-    @Column(name = "nome_pagador", length = 14)
+    @Column(name = "nome_pagador", length = 50)
     private String payerName;
 
-    @Column(name = "nome_fantasia_pagador")
+    @Column(name = "nome_fantasia_pagador", length = 50)
     private String payerFantasyName;
 
 }

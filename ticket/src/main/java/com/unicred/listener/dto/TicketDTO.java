@@ -1,6 +1,5 @@
 package com.unicred.listener.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.math.BigDecimal;

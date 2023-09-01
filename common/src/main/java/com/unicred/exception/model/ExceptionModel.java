@@ -16,7 +16,7 @@ public class ExceptionModel {
 
     private Integer code;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt_BR", timezone = "America/Fortaleza")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt_BR")
     private Date datestamp;
 
     private String message;
