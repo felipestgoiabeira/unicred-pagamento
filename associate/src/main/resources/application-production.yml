@@ -8,5 +8,20 @@ spring:
     password: 1234
     url: jdbc:postgresql://associatedb:5432/UNICRED_ASSOCIADO
     username: root
-    kafka:
-      bootstrap-servers: http://kafka:29092
+  kafka:
+    bootstrap-servers: ${KAFKA_URI:kafka:29092}
+    properties:
+      security.protocol: PLAINTEXT
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      max-poll-records: 1
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      group-id: "unicred-payment"
+      client-id: "unicred-payment"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: manual_immediate

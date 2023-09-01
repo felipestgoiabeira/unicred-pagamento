@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
-    bootstrap-servers: http://localhost:29092
+    bootstrap-servers: ${KAFKA_URI:kafka:29092}
     properties:
       security.protocol: PLAINTEXT
     consumer:
