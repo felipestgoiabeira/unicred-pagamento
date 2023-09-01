@@ -1,13 +1,25 @@
 version: '3.5'
 
 services:
-  associate:
+  associateservice:
       build:
         context: ..
         dockerfile: docker/Dockerfile
       command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
       depends_on:
         - dbassociate
+      ports:
+        - 8080:8080
+
+  ticketservice:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: bash -c "java -jar ticket/application.jar --spring.profiles.active=production"
+    depends_on:
+      - dbticket
+    ports:
+      - 8081:8081
 
   dbassociate:
     image: postgres
