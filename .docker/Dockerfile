@@ -11,10 +11,16 @@ RUN mvn dependency:go-offline
 
 COPY . /application
 
-RUN mvn clean package -Dmaven.test.skip=true
+RUN mvn clean package
 
 FROM openjdk:17
 COPY --from=builder /application/associate/target/application.jar associate/application.jar
 COPY --from=builder /application/ticket/target/application.jar ticket/application.jar
 COPY --from=builder /application/files/target/application.jar files/application.jar
+
+
+COPY --from=builder /application/associate/target/site/jacoco/ /sites/associate
+COPY --from=builder /application/ticket/target/site/jacoco/ /sites/ticket
+COPY --from=builder /application/files/target/site/jacoco/ /sites/files
+
 EXPOSE 8080
