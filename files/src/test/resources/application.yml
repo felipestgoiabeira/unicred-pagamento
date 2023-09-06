@@ -1,0 +1,15 @@
+topics:
+  create-ticket: create-ticket
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+apis:
+  associate:
+    url: http://associateservice:8080/api/associados
