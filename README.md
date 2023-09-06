@@ -7,10 +7,16 @@ Para executar o projeto é necessário ter o Docker e Docker Compose instalados.
 
 Para rodar o projeto execute:
 ```
-  docker-compose -f docker/docker-compose.yml up --build
+  docker-compose -f .docker/docker-compose.yml down -v && docker-compose -f .docker/docker-compose.yml up --build
 ```
 
+O primeiro comando executado é para garantir que o volume com os relatórios de testes do Jacoco esteja atualizado.
+
+O segundo comando irá contruir e subir os containers necessários para o sistema.
+
+
 O Docker Compose deste projeto possui os seguintes serviços:
+
 * API Associados
 * Banco Postgres Associados
 * API Boletos
@@ -18,6 +24,7 @@ O Docker Compose deste projeto possui os seguintes serviços:
 * API de Arquivos
 * Zookeeper
 * Kafka
+* Nginx
 
 Descrição das API's
 -------------
@@ -63,4 +70,25 @@ Para acessar acessar o Swagger da API de Associados acesse o link:
 
 ```
 http://localhost:8083/api/swagger-ui/index.html
+```
+
+Relatório de Cobertura de Testes do Jacoco
+-------------
+
+Este projeto possui uma cobertura mínima de 70%. Para visualizar os relatórios de cobertura 
+do Jacoco, acesse os seguintes links para cada serviço.
+
+API de Associados
+```
+http://localhost/associate/
+```
+
+API de Boletos
+```
+http://localhost/ticket/
+```
+
+API de Arquivos
+```
+http://localhost/files/
 ```

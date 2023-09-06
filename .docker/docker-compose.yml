@@ -2,24 +2,27 @@ version: '3.5'
 
 services:
   associateservice:
-      hostname: associateservice
-      build:
-        context: ..
-        dockerfile: docker/Dockerfile
-      command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
-      environment:
-        KAFKA_URI: http://kafka:29092
-      depends_on:
-        - associatedb
-      ports:
-        - 8080:8080
-      networks:
-        - unicred
+    hostname: associateservice
+    build:
+      context: ..
+      dockerfile: ./.docker/Dockerfile
+    command: bash -c "java -jar associate/application.jar --spring.profiles.active=production"
+    environment:
+      KAFKA_URI: http://kafka:29092
+    volumes:
+      - type: volume
+        source: jacoco-reports
+        target: /sites/
+
+    depends_on:
+      - associatedb
+    ports:
+      - 8080:8080
 
   ticketservice:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: ./.docker/Dockerfile
     command: bash -c "java -jar ticket/application.jar --spring.profiles.active=production"
     environment:
       KAFKA_URI: http://kafka:29092
@@ -27,20 +30,16 @@ services:
       - ticketdb
     ports:
       - 8081:8081
-    networks:
-      - unicred
 
   filesservice:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: ./.docker/Dockerfile
     command: bash -c "java -jar files/application.jar --spring.profiles.active=production"
     depends_on:
       - ticketdb
     ports:
       - 8083:8083
-    networks:
-      - unicred
 
   associatedb:
     hostname: associatedb
@@ -51,8 +50,6 @@ services:
       POSTGRES_DB: UNICRED_ASSOCIADO
     ports:
       - 5432:5432
-    networks:
-      - unicred
 
   ticketdb:
     hostname: ticketdb
@@ -66,8 +63,6 @@ services:
       PGPORT: 5435
     ports:
       - 5435:5435
-    networks:
-      - unicred
 
   zookeeper:
     container_name: zookeeper
@@ -77,8 +72,6 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
-    networks:
-      - unicred
 
   kafka:
     container_name: kafka
@@ -94,8 +87,23 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - unicred
 
-networks:
-  unicred:
+  nginx:
+    build:
+      context: nginx
+      dockerfile: ""
+    volumes:
+      - type: volume
+        source: jacoco-reports
+        target: /usr/share/nginx/html/sites/
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+    depends_on:
+      - associateservice
+    ports:
+      - 80:80
+
+
+volumes:
+  jacoco-reports:
