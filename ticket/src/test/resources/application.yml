@@ -1,0 +1,19 @@
+topics:
+  create-ticket: create-ticket
+  
+apis:
+  associate:
+    url: http://associateservice:8080/api/associados
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: unicred-payment

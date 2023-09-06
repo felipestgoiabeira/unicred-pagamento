@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AssociateTicketMapper {
+
     Ticket toTicket(CreateTicketDTO dto);
 
     default List<Ticket> toTicketList(List<CreateTicketDTO> tickets, @Context UUID uuid) {
